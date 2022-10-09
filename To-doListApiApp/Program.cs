@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using To_doListApiApp.Data;
 using To_doListApiApp.Services;
 using To_doListApiApp.Services.AuthServices;
+using To_doListApiApp.Services.ItemServices;
+using To_doListApiApp.Services.WorkspaceServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 );
 
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IWorkspaceService, WorkspaceService>();
+builder.Services.AddScoped<IItemService, ItemSerivce>();
 
 var app = builder.Build();
 
