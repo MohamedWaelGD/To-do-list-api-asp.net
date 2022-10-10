@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using To_doListApiApp.Data;
 using To_doListApiApp.Dtos.UserDto;
 using To_doListApiApp.Models;
@@ -8,15 +11,17 @@ namespace To_doListApiApp.Services.AuthServices
 {
     public class AuthService : IAuthService
     {
-        private static int activeUser = 0;
-
         private readonly AppDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(AppDbContext dbContext, IMapper mapper)
+        public AuthService(AppDbContext dbContext, IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             this._dbContext = dbContext;
             this._mapper = mapper;
+            this._configuration = configuration;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ResponseAPI<string>> Login(UserLoginDto userLoginDto)
@@ -37,8 +42,7 @@ namespace To_doListApiApp.Services.AuthServices
                 response.message = "Wrong Password.";
             }
 
-            activeUser = user.Id;
-            response.data = user.Email;
+            response.data = CreateToken(user);
 
             return response;
         }
@@ -99,7 +103,35 @@ namespace To_doListApiApp.Services.AuthServices
 
         public int GetUserId()
         {
-            return activeUser;
+            return int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+        }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            SymmetricSecurityKey key = new SymmetricSecurityKey(
+                System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
+            SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = creds
+            };
+
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return tokenHandler.WriteToken(token);
         }
     }
 }

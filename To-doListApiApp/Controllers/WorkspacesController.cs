@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using To_doListApiApp.Dtos.WorkspaceDto;
 using To_doListApiApp.Models;
@@ -8,6 +9,7 @@ namespace To_doListApiApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class WorkspacesController : ControllerBase
     {
         private readonly IWorkspaceService _workspaceService;

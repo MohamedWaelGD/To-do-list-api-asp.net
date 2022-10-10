@@ -13,6 +13,6 @@ namespace To_doListApiApp.Dtos.UserDto
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [Required]
-        public DateOnly Birthdate { get; set; }
+        public DateTime Birthdate { get; set; }
     }
 }

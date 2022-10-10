@@ -14,7 +14,7 @@ namespace To_doListApiApp.Models
         public byte[]? PasswordSalt { get; set; }
         public DateTime? CreatedAt { get; set; } = DateTime.Now;
         [Required]
-        public DateOnly Birthdate { get; set; }
-        public IEnumerable<UserWorkspaceRole>? UserWorkspaceRoles { get; set; }
+        public DateTime Birthdate { get; set; }
+        public IEnumerable<UserWorkspace>? UserWorkspaceRoles { get; set; }
     }
 }

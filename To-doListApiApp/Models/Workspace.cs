@@ -7,7 +7,7 @@ namespace To_doListApiApp.Models
         public int Id { get; set; }
         [Required]
         public string Name { get; set; }
-        public IEnumerable<UserWorkspaceRole>? UserWorkspaceRoles { get; set; }
+        public IEnumerable<UserWorkspace>? UserWorkspaceRoles { get; set; }
         public IEnumerable<Item>? Items { get; set; }
     }
 }
