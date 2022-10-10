@@ -8,6 +8,7 @@ namespace To_doListApiApp.Services.AuthServices
         Task<ResponseAPI<int>> Register(UserRegisterDto userRegisterDto);
         Task<ResponseAPI<string>> Login(UserLoginDto userLoginDto);
         Task<bool> IsHasPermission(int workspaceId);
+        Task<bool> IsWorkspaceOwner(int workspaceId);
         int GetUserId();
     }
 }

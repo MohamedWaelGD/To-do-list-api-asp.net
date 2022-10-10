@@ -55,7 +55,7 @@ namespace To_doListApiApp.Controllers
             return Ok(response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{workspaceId}")]
         public async Task<ActionResult<ResponseAPI<IEnumerable<WorkspaceGetDto>>>> DeleteWorkspace(int workspaceId)
         {
             var response = await _workspaceService.DeleteWorkspace(workspaceId);

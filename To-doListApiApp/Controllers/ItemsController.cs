@@ -31,7 +31,7 @@ namespace To_doListApiApp.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
+        [HttpGet("{workspaceId}")]
         public async Task<ActionResult<ResponseAPI<IEnumerable<ItemGetDto>>>> GetItems(int workspaceId)
         {
             var response = await _itemService.GetItems(workspaceId);
@@ -55,7 +55,7 @@ namespace To_doListApiApp.Controllers
             return Ok(response);
         }
 
-        [HttpDelete]
+        [HttpDelete("{itemId}")]
         public async Task<ActionResult<ResponseAPI<IEnumerable<ItemGetDto>>>> DeleteItem(int itemId)
         {
             var response = await _itemService.DeleteItem(itemId);

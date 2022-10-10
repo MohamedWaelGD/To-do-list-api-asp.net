@@ -101,6 +101,13 @@ namespace To_doListApiApp.Services.AuthServices
             return userWorkspace.Role != UserWorkspaceRole.Visitor;
         }
 
+        public async Task<bool> IsWorkspaceOwner(int workspaceId)
+        {
+            var userWorkspace = await _dbContext.UserWorkspaces.FirstOrDefaultAsync(e => e.UserId == GetUserId() && e.WorkspaceId == workspaceId);
+
+            return userWorkspace.Role == UserWorkspaceRole.Owner;
+        }
+
         public int GetUserId()
         {
             return int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));

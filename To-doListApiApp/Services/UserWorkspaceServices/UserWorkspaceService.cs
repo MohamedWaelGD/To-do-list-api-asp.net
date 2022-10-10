@@ -85,8 +85,6 @@ namespace To_doListApiApp.Services.UserWorkspaceServices
             var response = new ResponseAPI<List<UserWorkspaceGetDto>>();
 
             response.data = await _dbContext.UserWorkspaces
-                .Include(e => e.Workspace)
-                .Include(e => e.User)
                 .Where(e => e.UserId == _authService.GetUserId())
                 .Select(e => _mapper.Map<UserWorkspaceGetDto>(e))
                 .ToListAsync();

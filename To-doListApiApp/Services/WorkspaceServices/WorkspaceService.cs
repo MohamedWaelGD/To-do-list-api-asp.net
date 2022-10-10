@@ -49,7 +49,7 @@ namespace To_doListApiApp.Services.WorkspaceServices
                 return response;
             }
 
-            if (!await _authService.IsHasPermission(id))
+            if (!await _authService.IsWorkspaceOwner(id))
             {
                 response.isSuccess = false;
                 response.message = "User does not has permission.";
@@ -94,9 +94,10 @@ namespace To_doListApiApp.Services.WorkspaceServices
         {
             var response = new ResponseAPI<IEnumerable<WorkspaceGetDto>>();
 
-            response.data = await _dbContext.UserWorkspaces
-                .Include(e => e.Workspace)
-                .Where(e => e.UserId == _authService.GetUserId())
+            var userWorkspaces = _dbContext.UserWorkspaces
+                .Where(e => e.UserId == _authService.GetUserId());
+
+            response.data = await userWorkspaces
                 .Select(e => _mapper.Map<WorkspaceGetDto>(e.Workspace))
                 .ToListAsync();
 
@@ -106,6 +107,11 @@ namespace To_doListApiApp.Services.WorkspaceServices
         private async Task<bool> IsWorkspaceExists(int id)
         {
             return await _dbContext.Workspaces.AnyAsync(e => e.Id == id);
+        }
+
+        private async Task<bool> IsOwner(int id)
+        {
+            return await _dbContext.Users.AnyAsync(e => e.Id == id);
         }
     }
 }

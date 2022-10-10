@@ -7,6 +7,8 @@ using To_doListApiApp.Data;
 using To_doListApiApp.Services;
 using To_doListApiApp.Services.AuthServices;
 using To_doListApiApp.Services.ItemServices;
+using To_doListApiApp.Services.ProfileServices;
+using To_doListApiApp.Services.UserWorkspaceServices;
 using To_doListApiApp.Services.WorkspaceServices;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,14 +30,16 @@ builder.Services.AddSwaggerGen(c =>
 
     c.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TodoListConnectionString"))
 );
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IWorkspaceService, WorkspaceService>();
 builder.Services.AddScoped<IItemService, ItemSerivce>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IUserWorkspaceService, UserWorkspaceService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {

@@ -22,15 +22,24 @@ namespace To_doListApiApp.Services.ItemServices
 
         public async Task<ResponseAPI<IEnumerable<ItemGetDto>>> CreateItem(ItemCreateDto itemCreateDto)
         {
+            var response = new ResponseAPI<IEnumerable<ItemGetDto>>();
             if (!await _authService.IsHasPermission(itemCreateDto.WorkspaceId))
             {
-                var response = new ResponseAPI<IEnumerable<ItemGetDto>>();
                 response.isSuccess = false;
                 response.message = "User doesn't has permission.";
                 return response;
             }
 
+            if (!await IsWorkspaceExists(itemCreateDto.WorkspaceId))
+            {
+                response.isSuccess = false;
+                response.message = "Workspace not found.";
+                return response;
+            }
+
             var item = _mapper.Map<Item>(itemCreateDto);
+            var workspace = await _dbContext.Workspaces.FindAsync(itemCreateDto.WorkspaceId);
+            item.Workspace = workspace;
             await _dbContext.Items.AddAsync(item);
             await _dbContext.SaveChangesAsync();
 
@@ -40,7 +49,7 @@ namespace To_doListApiApp.Services.ItemServices
         public async Task<ResponseAPI<IEnumerable<ItemGetDto>>> DeleteItem(int id)
         {
             var response = new ResponseAPI<IEnumerable<ItemGetDto>>();
-            var item = await _dbContext.Items.FirstOrDefaultAsync(e => e.Id == id);
+            var item = await _dbContext.Items.Include(e => e.Workspace).FirstOrDefaultAsync(e => e.Id == id);
 
             if (!await IsItemExists(id))
             {
@@ -65,7 +74,7 @@ namespace To_doListApiApp.Services.ItemServices
         public async Task<ResponseAPI<ItemGetDto>> EditItem(ItemEditDto itemEditDto)
         {
             var response = new ResponseAPI<ItemGetDto>();
-            var item = await _dbContext.Items.FirstOrDefaultAsync(e => e.Id == itemEditDto.Id);
+            var item = await _dbContext.Items.Include(e => e.Workspace).FirstOrDefaultAsync(e => e.Id == itemEditDto.Id);
 
             if (!await IsItemExists(itemEditDto.Id))
             {
@@ -94,8 +103,7 @@ namespace To_doListApiApp.Services.ItemServices
             var response = new ResponseAPI<IEnumerable<ItemGetDto>>();
 
             response.data = await _dbContext.Items
-                .Include(e => e.Workspace)
-                .Where(e => e.Id == _authService.GetUserId() && e.Workspace.Id == workspaceId)
+                .Where(e => e.Workspace.Id == workspaceId)
                 .Select(e => _mapper.Map<ItemGetDto>(e))
                 .ToListAsync();
 
@@ -105,6 +113,11 @@ namespace To_doListApiApp.Services.ItemServices
         private async Task<bool> IsItemExists(int id)
         {
             return await _dbContext.Items.AnyAsync(e => e.Id == id);
+        }
+
+        private async Task<bool> IsWorkspaceExists(int id)
+        {
+            return await _dbContext.Workspaces.AnyAsync(e => e.Id == id);
         }
     }
 }
