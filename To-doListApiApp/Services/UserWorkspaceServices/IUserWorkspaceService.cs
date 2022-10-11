@@ -7,6 +7,7 @@ namespace To_doListApiApp.Services.UserWorkspaceServices
     {
         Task<ResponseAPI<List<UserWorkspaceGetDto>>> CreateUserWorkspace(UserWorkspaceCreateDto userWorkspaceCreateDto);
         Task<ResponseAPI<List<UserWorkspaceGetDto>>> GetUserWorkspace();
+        Task<ResponseAPI<List<UserWorkspaceGetDto>>> GetUserWorkspace(int workspaceId);
         Task<ResponseAPI<UserWorkspaceGetDto>> EditUserWorkspace(UserWorkspaceEditDto userWorkspaceEditDto);
     }
 }

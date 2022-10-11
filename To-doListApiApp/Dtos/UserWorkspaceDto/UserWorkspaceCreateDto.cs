@@ -4,7 +4,7 @@ namespace To_doListApiApp.Dtos.UserWorkspaceDto
 {
     public class UserWorkspaceCreateDto
     {
-        public int UserId { get; set; }
+        public string UserEmail { get; set; }
         public int WorkspaceId { get; set; }
         public UserWorkspaceRole Role { get; set; }
     }

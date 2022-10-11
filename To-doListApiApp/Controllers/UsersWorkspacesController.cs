@@ -57,5 +57,18 @@ namespace To_doListApiApp.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ResponseAPI<List<UserWorkspaceGetDto>>>> GetUserWorkspace(int id)
+        {
+            var response = await _userWorkspaceService.GetUserWorkspace(id);
+
+            if (!response.isSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
     }
 }

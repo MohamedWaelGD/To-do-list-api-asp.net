@@ -6,5 +6,6 @@ namespace To_doListApiApp.Services.ProfileServices
     public interface IProfileService
     {
         Task<ResponseAPI<UserGetDto>> GetProfile();
+        Task<ResponseAPI<UserGetDto>> EditProfile(UserEditDto userEditDto);
     }
 }

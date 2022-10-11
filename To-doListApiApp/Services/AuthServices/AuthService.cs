@@ -32,6 +32,7 @@ namespace To_doListApiApp.Services.AuthServices
             {
                 response.isSuccess = false;
                 response.message = "User is not found.";
+                return response;
             }
 
             var user = await _dbContext.Users.FirstOrDefaultAsync(e => e.Email == userLoginDto.Email);
@@ -40,6 +41,7 @@ namespace To_doListApiApp.Services.AuthServices
             {
                 response.isSuccess = false;
                 response.message = "Wrong Password.";
+                return response;
             }
 
             response.data = CreateToken(user);
@@ -55,6 +57,7 @@ namespace To_doListApiApp.Services.AuthServices
             {
                 response.isSuccess = false;
                 response.message = "User already signed up in system.";
+                return response;
             }
 
             var newUser = _mapper.Map<User>(userRegisterDto);
@@ -107,6 +110,12 @@ namespace To_doListApiApp.Services.AuthServices
 
             return userWorkspace.Role == UserWorkspaceRole.Owner;
         }
+
+        public async Task<bool> IsOwner(int workspaceId)
+        {
+            return await _dbContext.UserWorkspaces.AnyAsync(e => e.UserId == GetUserId() && e.WorkspaceId == workspaceId && e.Role == UserWorkspaceRole.Owner);
+        }
+
 
         public int GetUserId()
         {

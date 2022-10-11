@@ -31,5 +31,18 @@ namespace To_doListApiApp.Controllers
 
             return Ok(response);
         }
+
+        [HttpPut]
+        public async Task<ActionResult<ResponseAPI<UserGetDto>>> EditProfile(UserEditDto userEditDto)
+        {
+            var response = await _profileService.EditProfile(userEditDto);
+
+            if (!response.isSuccess)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
     }
 }

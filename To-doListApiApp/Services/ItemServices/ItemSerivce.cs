@@ -51,6 +51,8 @@ namespace To_doListApiApp.Services.ItemServices
             var response = new ResponseAPI<IEnumerable<ItemGetDto>>();
             var item = await _dbContext.Items.Include(e => e.Workspace).FirstOrDefaultAsync(e => e.Id == id);
 
+            var workspaceId = item.Workspace.Id;
+
             if (!await IsItemExists(id))
             {
                 response.isSuccess = false;
@@ -68,7 +70,7 @@ namespace To_doListApiApp.Services.ItemServices
             _dbContext.Items.Remove(item);
             await _dbContext.SaveChangesAsync();
 
-            return await GetItems(id);
+            return await GetItems(workspaceId);
         }
 
         public async Task<ResponseAPI<ItemGetDto>> EditItem(ItemEditDto itemEditDto)

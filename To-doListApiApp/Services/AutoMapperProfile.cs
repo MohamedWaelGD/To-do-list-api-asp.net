@@ -14,6 +14,7 @@ namespace To_doListApiApp.Services
             CreateMap<User, UserLoginDto>().ReverseMap();
             CreateMap<User, UserRegisterDto>().ReverseMap();
             CreateMap<User, UserGetDto>().ReverseMap();
+            CreateMap<User, UserEditDto>().ReverseMap();
 
             CreateMap<Workspace, WorkspaceCreateDto>().ReverseMap();
             CreateMap<Workspace, WorkspaceEditDto>().ReverseMap();

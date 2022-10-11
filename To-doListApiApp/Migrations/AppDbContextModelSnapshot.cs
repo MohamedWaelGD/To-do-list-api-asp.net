@@ -82,7 +82,7 @@ namespace To_doListApiApp.Migrations
 
             modelBuilder.Entity("To_doListApiApp.Models.UserWorkspace", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("UserEmail")
                         .HasColumnType("int");
 
                     b.Property<int>("WorkspaceId")
@@ -91,7 +91,7 @@ namespace To_doListApiApp.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId", "WorkspaceId");
+                    b.HasKey("UserEmail", "WorkspaceId");
 
                     b.HasIndex("WorkspaceId");
 
@@ -130,7 +130,7 @@ namespace To_doListApiApp.Migrations
                 {
                     b.HasOne("To_doListApiApp.Models.User", "User")
                         .WithMany("UserWorkspaceRoles")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserEmail")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

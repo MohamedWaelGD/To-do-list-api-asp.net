@@ -8,6 +8,7 @@ namespace To_doListApiApp.Dtos.UserWorkspaceDto
     {
         public int UserId { get; set; }
         public int WorkspaceId { get; set; }
+        public UserGetDto User { get; set; }
         public UserWorkspaceRole Role { get; set; }
     }
 }
